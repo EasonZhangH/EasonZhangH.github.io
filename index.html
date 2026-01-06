@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>張嘉祥的資料結構筆記</title>
+  <title>張嘉祥的資料結構筆記 | CS203A 學習歷程</title>
+  <meta name="description" content="CS203A 資料結構課程的完整筆記、演化過程與優化分析。涵蓋陣列、鏈結串列、雜湊表、樹、堆與圖等核心資料結構。" />
   <style>
     /* Reset */
     * {
@@ -12,91 +13,583 @@
       box-sizing: border-box;
     }
 
+    :root {
+      --primary-color: #00bcd4;
+      --secondary-color: #ffd54f;
+      --accent-color: #ff6b6b;
+      --dark-bg: #1e1e2f;
+      --card-bg: #2c2c3c;
+      --text-light: #e0e0e0;
+      --text-muted: #aaa;
+      --border-color: #3a3a4a;
+    }
+
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #1e1e2f;
-      color: #e0e0e0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1e1e2f 0%, #2a2a3e 100%);
+      color: var(--text-light);
       line-height: 1.6;
       padding: 2rem;
     }
 
+    /* Navigation */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    nav .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: var(--primary-color);
+    }
+
+    /* Header */
     header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 3rem;
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     header h1 {
-      font-size: 2.5rem;
-      color: #00bcd4;
+      font-size: 2.8rem;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 20px rgba(0, 188, 212, 0.3);
     }
 
     header p {
-      font-size: 1.2rem;
-      color: #aaa;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Main Content */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Section Titles */
+    .section-title {
+      font-size: 2rem;
+      color: var(--secondary-color);
+      margin: 3rem 0 2rem 0;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--primary-color);
+    }
+
+    /* Card Grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
     }
 
     .card {
-      background-color: #2c2c3c;
+      background-color: var(--card-bg);
       border-radius: 10px;
       padding: 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      transition: transform 0.3s ease;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      border-left: 4px solid var(--primary-color);
     }
 
     .card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-8px);
+      box-shadow: 0 8px 20px rgba(0, 188, 212, 0.2);
+      border-left-color: var(--secondary-color);
     }
 
     .card h2 {
-      color: #ffd54f;
+      color: var(--secondary-color);
       margin-bottom: 1rem;
+      font-size: 1.4rem;
+    }
+
+    .card h3 {
+      color: var(--primary-color);
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .card p {
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+      line-height: 1.8;
     }
 
     .card a {
-      color: #80deea;
+      color: var(--primary-color);
       text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
     }
 
     .card a:hover {
+      color: var(--secondary-color);
       text-decoration: underline;
     }
 
+    /* Data Structure Cards */
+    .ds-card {
+      background: linear-gradient(135deg, rgba(0, 188, 212, 0.1) 0%, rgba(255, 213, 79, 0.05) 100%);
+      border: 1px solid var(--border-color);
+    }
+
+    .ds-card .badge {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: #000;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Feature List */
+    .feature-list {
+      list-style: none;
+      margin-top: 1rem;
+    }
+
+    .feature-list li {
+      padding: 0.5rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .feature-list li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+
+    /* Complexity Table */
+    .complexity-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .complexity-table th,
+    .complexity-table td {
+      padding: 0.8rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .complexity-table th {
+      background-color: rgba(0, 188, 212, 0.2);
+      color: var(--secondary-color);
+      font-weight: bold;
+    }
+
+    .complexity-table tr:hover {
+      background-color: rgba(0, 188, 212, 0.1);
+    }
+
+    /* Stats Section */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .stat-box {
+      background-color: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 10px;
+      text-align: center;
+      border-top: 3px solid var(--primary-color);
+    }
+
+    .stat-box .number {
+      font-size: 2.5rem;
+      color: var(--secondary-color);
+      font-weight: bold;
+    }
+
+    .stat-box .label {
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    /* Learning Journey */
+    .journey-timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .journey-timeline .step {
+      margin-bottom: 2rem;
+      padding-left: 2rem;
+      position: relative;
+    }
+
+    .journey-timeline .step:before {
+      content: "";
+      position: absolute;
+      left: -2.5rem;
+      top: 0;
+      width: 20px;
+      height: 20px;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      border: 3px solid var(--card-bg);
+    }
+
+    .journey-timeline .step:after {
+      content: "";
+      position: absolute;
+      left: -2.15rem;
+      top: 20px;
+      width: 2px;
+      height: 2rem;
+      background-color: var(--border-color);
+    }
+
+    .journey-timeline .step:last-child:after {
+      display: none;
+    }
+
+    .journey-timeline .step h4 {
+      color: var(--secondary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Footer */
     footer {
       text-align: center;
-      margin-top: 3rem;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 2px solid var(--border-color);
       font-size: 0.9rem;
-      color: #666;
+      color: var(--text-muted);
+    }
+
+    footer a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+
+      header h1 {
+        font-size: 2rem;
+      }
+
+      nav ul {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">EasonZhang</div>
+    <ul>
+      <li><a href="#overview">概覽</a></li>
+      <li><a href="#data-structures">資料結構</a></li>
+      <li><a href="#learning-journey">學習歷程</a></li>
+      <li><a href="#resources">資源</a></li>
+    </ul>
+  </nav>
+
+  <!-- Header -->
   <header>
-    <h1>張嘉祥的資料結構筆記</h1>
-    <p>這是 CS203A 課程的個人學習網頁，記錄筆記、作業與學習歷程。</p>
+    <h1>📚 資料結構完整筆記</h1>
+    <p>CS203A 課程的深度學習記錄 | 從基礎到進階的完整演化過程</p>
   </header>
 
-  <section class="card">
-    <h2>📘 課程資訊</h2>
-    <p>課程名稱：資料結構 (CS203A)</p>
-    <p>授課教師：黃鈺峰 教授</p>
-    <p>學期：114 學年度第一學期</p>
-  </section>
+  <main>
+    <!-- Overview Section -->
+    <section id="overview">
+      <h2 class="section-title">📖 課程概覽</h2>
+      <div class="card-grid">
+        <div class="card">
+          <h2>🎓 課程資訊</h2>
+          <p><strong>課程名稱：</strong>資料結構 (CS203A)</p>
+          <p><strong>授課教師：</strong>黃鈺峰 教授</p>
+          <p><strong>學年度：</strong>114 學年度第一學期</p>
+          <p><strong>大學：</strong>元智大學</p>
+        </div>
 
-  <section class="card">
-    <h2>📝 筆記與作業倉庫</h2>
-    <p>GitHub Repository：<a href="https://github.com/EasonZhangH/11401_CS203A" target="_blank">11401_CS203A</a></p>
-    <p>內容包含：課堂筆記、作業提交、版本控制、專案紀錄</p>
-  </section>
+        <div class="card">
+          <h2>📊 學習統計</h2>
+          <div class="stats">
+            <div class="stat-box">
+              <div class="number">6</div>
+              <div class="label">核心資料結構</div>
+            </div>
+            <div class="stat-box">
+              <div class="number">20+</div>
+              <div class="label">演算法主題</div>
+            </div>
+            <div class="stat-box">
+              <div class="number">100+</div>
+              <div class="label">程式碼範例</div>
+            </div>
+          </div>
+        </div>
 
-  <section class="card">
-    <h2>👤 我的 GitHub</h2>
-    <p>帳號：<a href="https://github.com/EasonZhangH" target="_blank">EasonZhangH</a></p>
-    <p>歡迎參觀我的其他專案與作品！</p>
-  </section>
+        <div class="card">
+          <h2>🔗 重要連結</h2>
+          <ul class="feature-list">
+            <li><a href="https://github.com/EasonZhangH/11401_CS203A" target="_blank">GitHub 筆記倉庫</a></li>
+            <li><a href="https://github.com/EasonZhangH" target="_blank">個人 GitHub 主頁</a></li>
+            <li><a href="https://github.com/EasonZhangH/11401_CS203A/blob/main/note/data_structure_summary.md" target="_blank">資料結構總整理</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
+    <!-- Data Structures Section -->
+    <section id="data-structures">
+      <h2 class="section-title">🏗️ 核心資料結構</h2>
+      <div class="card-grid">
+        <!-- Array -->
+        <div class="card ds-card">
+          <span class="badge">線性結構</span>
+          <h2>陣列 (Array)</h2>
+          <h3>核心特性</h3>
+          <ul class="feature-list">
+            <li>隨機存取：O(1)</li>
+            <li>查找：O(N)</li>
+            <li>插入/刪除：O(N)</li>
+          </ul>
+          <h3>最佳應用</h3>
+          <p>固定大小數據、頻繁隨機存取、快取優化</p>
+          <a href="https://github.com/EasonZhangH/11401_CS203A/tree/main/note/array" target="_blank">查看筆記 →</a>
+        </div>
+
+        <!-- Linked List -->
+        <div class="card ds-card">
+          <span class="badge">線性結構</span>
+          <h2>鏈結串列 (Linked List)</h2>
+          <h3>核心特性</h3>
+          <ul class="feature-list">
+            <li>隨機存取：O(N)</li>
+            <li>查找：O(N)</li>
+            <li>插入/刪除：O(1)*</li>
+          </ul>
+          <h3>最佳應用</h3>
+          <p>頻繁插入/刪除、LRU Cache、動態記憶體</p>
+          <a href="https://github.com/EasonZhangH/11401_CS203A/tree/main/note/linkedList" target="_blank">查看筆記 →</a>
+        </div>
+
+        <!-- Hash Table -->
+        <div class="card ds-card">
+          <span class="badge">雜湊結構</span>
+          <h2>雜湊表 (Hash Table)</h2>
+          <h3>核心特性</h3>
+          <ul class="feature-list">
+            <li>查找：O(1) 平均</li>
+            <li>插入：O(1) 平均</li>
+            <li>刪除：O(1) 平均</li>
+          </ul>
+          <h3>最佳應用</h3>
+          <p>快速查找、去重、計數、符號表</p>
+          <a href="https://github.com/EasonZhangH/11401_CS203A/tree/main/note/hash" target="_blank">查看筆記 →</a>
+        </div>
+
+        <!-- Tree & Heap -->
+        <div class="card ds-card">
+          <span class="badge">樹狀結構</span>
+          <h2>樹與堆 (Tree & Heap)</h2>
+          <h3>核心特性</h3>
+          <ul class="feature-list">
+            <li>查找：O(log N) 平衡樹</li>
+            <li>插入/刪除：O(log N)</li>
+            <li>優先權操作：O(log N)</li>
+          </ul>
+          <h3>最佳應用</h3>
+          <p>有序數據、優先權佇列、Dijkstra、Huffman</p>
+          <a href="https://github.com/EasonZhangH/11401_CS203A/tree/main/note/tree%26heap" target="_blank">查看筆記 →</a>
+        </div>
+
+        <!-- Queue & Stack -->
+        <div class="card ds-card">
+          <span class="badge">線性結構</span>
+          <h2>佇列與堆疊 (Queue & Stack)</h2>
+          <h3>核心特性</h3>
+          <ul class="feature-list">
+            <li>FIFO / LIFO 操作</li>
+            <li>Push/Pop：O(1)</li>
+            <li>單調棧/隊列優化</li>
+          </ul>
+          <h3>最佳應用</h3>
+          <p>遞迴、函數呼叫、BFS、括號配對</p>
+          <a href="https://github.com/EasonZhangH/11401_CS203A/tree/main/note/queue%26stack" target="_blank">查看筆記 →</a>
+        </div>
+
+        <!-- Graph -->
+        <div class="card ds-card">
+          <span class="badge">圖狀結構</span>
+          <h2>圖 (Graph)</h2>
+          <h3>核心特性</h3>
+          <ul class="feature-list">
+            <li>遍歷：O(V+E)</li>
+            <li>最短路徑：O((V+E)log V)</li>
+            <li>拓撲排序：O(V+E)</li>
+          </ul>
+          <h3>最佳應用</h3>
+          <p>網路、路徑尋找、社交圖、依賴關係</p>
+          <a href="https://github.com/EasonZhangH/11401_CS203A/tree/main/note/graph" target="_blank">查看筆記 →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Learning Journey Section -->
+    <section id="learning-journey">
+      <h2 class="section-title">🚀 學習歷程與優化</h2>
+      <div class="card">
+        <h3>筆記演進過程</h3>
+        <div class="journey-timeline">
+          <div class="step">
+            <h4>第一階段：基礎概念</h4>
+            <p>掌握每個資料結構的定義、基本操作與簡單應用。建立對線性結構（陣列、鏈結串列）的理解。</p>
+          </div>
+          <div class="step">
+            <h4>第二階段：效能分析</h4>
+            <p>深入研究時間與空間複雜度，比較不同結構在各種操作下的效能差異。引入雜湊表與樹的概念。</p>
+          </div>
+          <div class="step">
+            <h4>第三階段：進階應用</h4>
+            <p>學習平衡樹、優先權佇列、圖演算法等進階主題。理解演算法優化與結構組合的重要性。</p>
+          </div>
+          <div class="step">
+            <h4>第四階段：整合與優化</h4>
+            <p>建立各結構間的聯繫，理解如何組合多個結構解決實際問題。撰寫完整的資料結構總整理筆記。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-grid" style="margin-top: 2rem;">
+        <div class="card">
+          <h2>✨ 筆記優化亮點</h2>
+          <ul class="feature-list">
+            <li>完整的複雜度對比表格</li>
+            <li>視覺化的演化過程說明</li>
+            <li>實際應用案例分析</li>
+            <li>結構組合設計模式</li>
+            <li>每個資料夾的 README 說明</li>
+            <li>100+ 行的程式碼範例</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>📈 學習建議</h2>
+          <ul class="feature-list">
+            <li>理解而非死記複雜度</li>
+            <li>透過實作加深理解</li>
+            <li>比較不同結構的權衡</li>
+            <li>練習結構組合應用</li>
+            <li>分析真實系統的設計</li>
+            <li>持續優化程式碼效能</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section id="resources">
+      <h2 class="section-title">📚 學習資源</h2>
+      <div class="card-grid">
+        <div class="card">
+          <h2>🔗 GitHub 資源</h2>
+          <ul class="feature-list">
+            <li><a href="https://github.com/EasonZhangH/11401_CS203A" target="_blank">完整筆記倉庫</a></li>
+            <li><a href="https://github.com/EasonZhangH/11401_CS203A/blob/main/note/data_structure_summary.md" target="_blank">資料結構總整理</a></li>
+            <li><a href="https://github.com/EasonZhangH" target="_blank">個人 GitHub 主頁</a></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>📖 推薦閱讀</h2>
+          <ul class="feature-list">
+            <li>Introduction to Algorithms (CLRS)</li>
+            <li>Competitive Programming (Halim & Halim)</li>
+            <li>CP-Algorithms 線上資源</li>
+            <li>Algorithm Visualizer 互動工具</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>🛠️ 開發工具</h2>
+          <ul class="feature-list">
+            <li>C++ STL 標準庫</li>
+            <li>VS Code 編輯器</li>
+            <li>Git 版本控制</li>
+            <li>LeetCode 練習平台</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
   <footer>
-    &copy; 2025 張嘉祥 | Powered by GitHub & VS Code
+    <p>&copy; 2025 張嘉祥 | CS203A 資料結構課程</p>
+    <p>Powered by <a href="https://github.com" target="_blank">GitHub</a> | 
+       <a href="https://github.com/EasonZhangH/11401_CS203A" target="_blank">查看完整筆記</a></p>
   </footer>
 </body>
 </html>
